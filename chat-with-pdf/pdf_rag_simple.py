@@ -1,5 +1,5 @@
-import streamlit as st
 import os
+import io
 
 from langchain_community.document_loaders import PDFPlumberLoader
 from langchain_text_splitters import RecursiveCharacterTextSplitter
@@ -10,8 +10,8 @@ from langchain_ollama.llms import OllamaLLM
 
 template = """
 You are an assistant for question-answering tasks. Use the following pieces of retrieved context to answer the question. If you don't know the answer, just say that you don't know. Use three sentences maximum and keep the answer concise.
-Question: {question} 
-Context: {context} 
+Question: {question}
+Context: {context}
 Answer:
 """
 
@@ -23,7 +23,6 @@ model = OllamaLLM(model="deepseek-r1:7b")
 def load_pdf(file_path):
     loader = PDFPlumberLoader(file_path=file_path)
     documents = loader.load()
-
     return documents
 
 def split_text(documents):
@@ -32,7 +31,6 @@ def split_text(documents):
         chunk_overlap=200,
         add_start_index=True
     )
-
     return text_splitter.split_documents(documents)
 
 def index_docs(documents):
@@ -45,20 +43,25 @@ def answer_question(question, documents):
     context = "\n\n".join([doc.page_content for doc in documents])
     prompt = ChatPromptTemplate.from_template(template)
     chain = prompt | model
-
     return chain.invoke({"question": question, "context": context})
 
-# Directly specify the file path
-file_path = "C:\\Users\\sinjav\\OneDrive - SAS\\GitHub Projects\\ollama-playground-test\\chat-with-pdf\\pdfs\\eng.pdf"
+if __name__ == "__main__":
+    # --- Configuration ---
+    file_path = "C:\\Users\\sinjav\\OneDrive - SAS\\GitHub Projects\\ollama-playground-test\\chat-with-pdf\\pdfs\\eng.pdf"  # <---  YOUR FILE PATH HERE
+    question_to_ask = "What is the main topic of this document?"  # <--- YOUR QUESTION HERE
+    output_file_path = r"C:\Users\sinjav\OneDrive - SAS\GitHub Projects\ollama-playground-test\chat-with-pdf\answer.txt" # Path to save the answer
 
-documents = load_pdf(file_path)
-chunked_documents = split_text(documents)
-index_docs(chunked_documents)
+    # --- Load, Process, and Index PDF ---
+    documents = load_pdf(file_path)
+    chunked_documents = split_text(documents)
+    index_docs(chunked_documents)
 
-question = st.chat_input()
+    # --- Answer the Question ---
+    related_documents = retrieve_docs(question_to_ask)
+    answer = answer_question(question_to_ask, related_documents)
 
-if question:
-    st.chat_message("user").write(question)
-    related_documents = retrieve_docs(question)
-    answer = answer_question(question, related_documents)
-    st.chat_message("assistant").write(answer)
+    # --- Save Answer to Text File ---
+    with open(output_file_path, "w") as f:
+        f.write(answer.content) # Access content attribute to get the string answer
+
+    print(f"Answer saved to: {output_file_path}")
