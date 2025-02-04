@@ -47,7 +47,7 @@ def answer_question(question, documents):
 
 if __name__ == "__main__":
     # --- Configuration ---
-    file_path = "C:\\Users\\sinjav\\OneDrive - SAS\\GitHub Projects\\ollama-playground-test\\chat-with-pdf\\pdfs\\eng.pdf"  # <---  YOUR FILE PATH HERE
+    file_path = "C:\\Users\\sinjav\\OneDrive - SAS\\GitHub Projects\\ollama-playground-test\\chat-with-pdf\\pdfs\\test.pdf"  # <---  YOUR FILE PATH HERE
     question_to_ask = "What is the main topic of this document?"  # <--- YOUR QUESTION HERE
     output_file_path = r"C:\Users\sinjav\OneDrive - SAS\GitHub Projects\ollama-playground-test\chat-with-pdf\answer.txt" # Path to save the answer
 
@@ -62,6 +62,6 @@ if __name__ == "__main__":
 
     # --- Save Answer to Text File ---
     with open(output_file_path, "w") as f:
-        f.write(answer.content) # Access content attribute to get the string answer
+         f.write(answer) # Access content attribute to get the string answer
 
     print(f"Answer saved to: {output_file_path}")
