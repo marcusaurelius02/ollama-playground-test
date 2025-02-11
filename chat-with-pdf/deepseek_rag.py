@@ -1,14 +1,15 @@
-# use pip install -r requirements.txt to install the packages 
-import streamlit as st
-from langchain_community.document_loaders import PDFPlumberLoader
-from langchain_experimental.text_splitter import SemanticChunker
-from langchain_community.embeddings import HuggingFaceEmbeddings
-from langchain_community.vectorstores import FAISS
-from langchain_community.llms import Ollama
-from langchain.prompts import PromptTemplate
-from langchain.chains.llm import LLMChain
-from langchain.chains.combine_documents.stuff import StuffDocumentsChain
-from langchain.chains import RetrievalQA
+# use pip install -r requirements.txt to install the packages
+# Import necessary libraries
+import streamlit as st  # Web app framework
+from langchain_community.document_loaders import PDFPlumberLoader  # Loads PDF documents
+from langchain_experimental.text_splitter import SemanticChunker  # Splits text into semantic chunks
+from langchain_community.embeddings import HuggingFaceEmbeddings  # Creates embeddings using HuggingFace models
+from langchain_community.vectorstores import FAISS  # Vector database for storing and searching embeddings
+from langchain_community.llms import Ollama  # Language model integration with Ollama
+from langchain.prompts import PromptTemplate  # Creates prompts for the language model
+from langchain.chains.llm import LLMChain  # Chain for language model interactions
+from langchain.chains.combine_documents.stuff import StuffDocumentsChain  # Combines documents
+from langchain.chains import RetrievalQA  # Question answering chain
 
 # Define color palette with improved contrast
 primary_color = "#007BFF"  # Bright blue for primary buttons
@@ -159,5 +160,3 @@ if uploaded_file is not None:
                 st.error(f"An error occurred: {e}")
 else:
     st.info("Please upload a PDF file to start.")
-
-
